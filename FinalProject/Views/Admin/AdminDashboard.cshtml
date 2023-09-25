@@ -1,0 +1,38 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AdminDashboard</title>
+</head>
+<body>
+</body>
+</html>
+
+<form asp-controller="Home" asp-action="Logout" method="post">
+    <button type="submit" class="btn btn-danger">Log Out</button>
+</form>
+
+<div>
+    <a asp-controller="Admin" asp-action="AddCategory" class="btn btn-primary">Kategori Ekle</a>
+</div>
+<div>
+    <a asp-controller="Admin" asp-action="EditCategory" class="btn btn-info">Kategorileri Düzenle</a>
+</div>
+<div>
+    <a asp-controller="Admin" asp-action="DeleteCategory" class="btn btn-info">Kategori Kaldır</a>
+</div>
+<div>
+    <a asp-controller="Admin" asp-action="AddProduct" class="btn btn-primary">Ürün Ekle</a>
+</div>
+<div>
+    <a asp-controller="Admin" asp-action="EditProduct" class="btn btn-info">Ürünleri Düzenle</a>
+</div>
+<div>
+    <a asp-controller="Admin" asp-action="DeleteProduct" class="btn btn-primary">Ürün Kaldır</a>
+</div>

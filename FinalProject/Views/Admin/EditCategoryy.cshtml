@@ -1,0 +1,12 @@
+﻿@model FinalProject.Models.Classes.Category;
+
+<h2>Kategori Düzenle</h2>
+
+<form asp-controller="Admin" asp-action="UpdateCategory" method="post">
+    <input type="hidden" asp-for="CategoryId" />
+    <div class="form-group">
+        <label for="CategoryName">Kategori Adı</label>
+        <input type="text" class="form-control" id="CategoryName" name="Name" value="@Model.Name" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Kategoriyi Kaydet</button>
+</form>

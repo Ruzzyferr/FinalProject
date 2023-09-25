@@ -1,0 +1,59 @@
+﻿@model FinalProject.Models.DTOs.VMRegister;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form asp-controller="Access" asp-action="Register" method="post">
+        <div>
+            <label for="FirstName">First Name:</label>
+            <input type="text" id="FirstName" name="FirstName" asp-for="FirstName" />
+        </div>
+        <div>
+            <label for="LastName">Last Name:</label>
+            <input type="text" id="LastName" name="LastName" asp-for="LastName" />
+        </div>
+        <div>
+            <label for="Email">Email:</label>
+            <input type="email" id="Email" name="Email" asp-for="Email" />
+        </div>
+        <div>
+            <label for="Password">Password:</label>
+            <input type="password" id="Password" name="Password" asp-for="Password" />
+        </div>
+        <div class="form-group">
+            <label asp-for="PasswordVerify"></label>
+            <input type="password" asp-for="PasswordVerify" class="form-control" />
+            <span asp-validation-for="PasswordVerify" class="text-danger"></span>
+        </div>
+        <div>
+            <label for="PhoneNumber">Phone Number:</label>
+            <input type="text" id="PhoneNumber" name="PhoneNumber" asp-for="PhoneNumber" />
+        </div>
+        <div>
+            <label for="BirthDate">Birth Date:</label>
+            <input type="date" id="BirthDate" name="BirthDate" asp-for="BirthDate" />
+        </div>
+        <div>
+            <label for="Address">Address:</label>
+            <input type="text" id="Address" name="Address" asp-for="Address" />
+        </div>
+        <div>
+            <label for="City">City:</label>
+            <input type="text" id="City" name="City" asp-for="City" />
+        </div>
+        <div>
+            <label for="PostalCode">Postal Code:</label>
+            <input type="text" id="PostalCode" name="PostalCode" asp-for="PostalCode" />
+        </div>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>

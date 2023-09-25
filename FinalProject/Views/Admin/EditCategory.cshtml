@@ -1,0 +1,24 @@
+﻿@model List<FinalProject.Models.Classes.Category> // Kategori listesini model olarak kullanıyoruz
+
+<h2>Kategorileri Düzenle</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Kategori Adı</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in ViewBag.Categories) // ViewBag veya ViewData ile gelen kategori listesini kullanma
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>
+                    <a asp-controller="Admin" asp-action="EditCategoryy" asp-route-id="@category.CategoryId" class="btn btn-primary">Düzenle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
