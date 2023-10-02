@@ -19,9 +19,7 @@ namespace FinalProject.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Veritabanı tablolarını ve ilişkilerini tanımlamak için gerekli kodları buraya ekleyebilirsiniz.
-
-            // Örnek: modelBuilder.Entity<ShoppingList>().HasMany(sl => sl.Items).WithOne(sli => sli.ShoppingList);
+            
         }
 
         

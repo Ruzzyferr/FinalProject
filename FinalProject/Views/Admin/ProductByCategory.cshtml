@@ -2,10 +2,11 @@
 
 <h2>@ViewBag.CategoryName Ürünleri</h2>
 
-<!-- Ürünleri listeleyin -->
+
 <table class="table">
     <thead>
         <tr>
+            <th>Ürün Görseli</th>
             <th>Ürün Adı</th>
             <th></th>
         </tr>
@@ -14,6 +15,9 @@
         @foreach (var product in Model.Products)
         {
             <tr>
+                <td>
+                    <img src="@product.ProductImage" alt="@product.Name" width="100" height="75" />
+                </td>
                 <td>@product.Name</td>
                 <td>
                     <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@product.ProductId" class="btn btn-primary">Düzenle</a>
@@ -32,5 +36,5 @@
     </div>
 </form>
 
-<!-- Geri dön butonu -->
-<a asp-controller="Admin" asp-action="ProductByCategory" asp-route-categoryId="@Model.SelectedCategoryId" class="btn btn-secondary">Kategorilere Geri Dön</a>
+
+<a asp-controller="Admin" asp-action="ListProducts"  class="btn btn-secondary">Kategorilere Geri Dön</a>

@@ -22,6 +22,12 @@
                     <form asp-controller="Admin" asp-action="DeleteCategory" method="post">
                         <input type="hidden" name="id" value="@category.CategoryId" />
                         <button type="submit" class="btn btn-danger">Sil</button>
+                        @if (ViewData["CategoryExists"] != null)
+                        {
+                            <br />
+                            <br />
+                            <label>@ViewData["CategoryExists"]</label>
+                        }
                     </form>
                 </td>
             </tr>

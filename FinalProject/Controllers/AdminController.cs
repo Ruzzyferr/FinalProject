@@ -31,17 +31,17 @@ namespace FinalProject.Controllers
         [HttpPost]
         public IActionResult AddCategory(VMCategory model)
         {
-            // Kategori adının benzersiz olup olmadığını kontrol edelim
+            
             var existingCategory = _dbContext.Categories.FirstOrDefault(c => c.Name == model.CategoryName);
 
             if (existingCategory != null)
             {
-                // Aynı isimde bir kategori zaten var, kullanıcıya uyarı verelim
+                
                 ViewData["CategoryExists"] = "Bu kategori zaten mevcut.";
                 return View(model);
             }
 
-            // Aynı isimde kategori yoksa, yeni kategoriyi veritabanına ekleyelim
+            
             var newCategory = new Category
             {
                 Name = model.CategoryName
@@ -50,8 +50,8 @@ namespace FinalProject.Controllers
             _dbContext.Categories.Add(newCategory);
             _dbContext.SaveChanges();
 
-            // Kategori başarıyla eklendi, kullanıcıyı isteğe bağlı olarak başka bir sayfaya yönlendirebilirsiniz
-            return RedirectToAction("EditCategory"); // Örnek olarak kategorilerin listelendiği sayfaya yönlendiriyoruz
+            
+            return RedirectToAction("EditCategory"); 
         }
 
         [Authorize(Roles = "Admin")]
@@ -73,7 +73,7 @@ namespace FinalProject.Controllers
 
             if (category == null)
             {
-                // Kategori bulunamadı, hata sayfasına yönlendirilebilir
+                
                 return NotFound();
             }
 
@@ -84,17 +84,17 @@ namespace FinalProject.Controllers
         [HttpPost]
         public IActionResult UpdateCategory(Category model)
         {
-            // Kategori adının benzersiz olup olmadığını kontrol edelim
-            var existingCategory = _dbContext.Categories.FirstOrDefault(c => c.Name == model.Name && c.CategoryId != model.CategoryId);
+            
+            var existingCategory = _dbContext.Categories.FirstOrDefault(c => c.Name == model.Name || c.CategoryId != model.CategoryId);
 
             if (existingCategory != null)
             {
-                // Aynı isimde bir kategori zaten var, kullanıcıya uyarı verelim
+                
                 ViewData["CategoryExists"] = "Bu kategori zaten mevcut.";
                 return View("EditCategory", model);
             }
 
-            // Kategori adını güncelle
+            
             var categoryToUpdate = _dbContext.Categories.Find(model.CategoryId);
             if (categoryToUpdate != null)
             {
@@ -103,7 +103,7 @@ namespace FinalProject.Controllers
                 _dbContext.SaveChanges();
             }
 
-            // Kategori başarıyla güncellendi, isteğe bağlı olarak başka bir sayfaya yönlendirebilirsiniz
+            
             return RedirectToAction("EditCategory");
         }
 
@@ -119,7 +119,7 @@ namespace FinalProject.Controllers
                 _dbContext.SaveChanges();
             }
 
-            // Kategori başarıyla silindi, kullanıcıyı kategori listesine yönlendirebilirsiniz
+            
             return RedirectToAction("EditCategory");
 
             }
@@ -144,10 +144,10 @@ namespace FinalProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult ProductByCategory(int SelectedCategoryId)
         {
-            // Seçilen kategoriye ait ürünleri veritabanından alın
+           
             var productsInCategory = _dbContext.Products.Where(p => p.CategoryId == SelectedCategoryId).ToList();
 
-            // ViewModel oluşturun ve verileri doldurun
+            
             var viewModel = new ProductByCategoryViewModel
             {
                 SelectedCategoryId = SelectedCategoryId,
@@ -176,25 +176,33 @@ namespace FinalProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Yeni ürün oluştur
+
+                var existingProduct = _dbContext.Products.FirstOrDefault(c => c.Name == model.ProductName );
+
+                if (existingProduct != null)
+                {
+                    ViewData["ProductExists"] = "Bu Ürün zaten mevcut.";
+                    return RedirectToAction("SaveProduct", existingProduct.CategoryId);
+                }
+
+                
                 Product newProduct = new Product
                 {
                     Name = model.ProductName,
-                    ProductImage = model.ProductImage, // Ürün görselini modelden alın
+                    ProductImage = model.ProductImage, 
                     CategoryId = model.CategoryId,
                     Category = _dbContext.Categories.Find(model.CategoryId)
                 };
 
-                // Yeni ürünü veritabanına ekleyin
+                
                 _dbContext.Products.Add(newProduct);
                 _dbContext.SaveChanges();
 
-                // İşlemler tamamlandıktan sonra, isteğe bağlı olarak başka bir sayfaya yönlendirebilirsiniz.
-                // Örneğin, ürün listesinin olduğu bir sayfaya yönlendirme:
+                
                 return RedirectToAction("ListProducts");
             }
 
-            // ModelState geçerli değilse, formu hata mesajlarıyla birlikte tekrar gösterin.
+            
             return View("SaveProduct", model);
         }
 
@@ -204,12 +212,12 @@ namespace FinalProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult EditProduct(int id) {
 
-            // Veritabanından belirli bir ürünü çekin (id'ye göre)
+            
             var product = _dbContext.Products.FirstOrDefault(p => p.ProductId == id);
 
             if (product == null)
             {
-                return NotFound(); // Örnek: 404 hata sayfasına yönlendirme
+                return NotFound(); 
             }
 
             VMProduct product1 = new VMProduct
@@ -219,10 +227,10 @@ namespace FinalProject.Controllers
                 CategoryId = product.CategoryId,
                 ProductImage = product.ProductImage,
             };
-            // Eğer ürün bulunamazsa hata işleme veya başka bir işlem yapma
+            
             
 
-            // Ürünü düzenleme sayfasına gönderin
+            
             return View(product1);
 
             }
@@ -237,11 +245,11 @@ namespace FinalProject.Controllers
 
             if (ModelState.IsValid)
             {
-                // Ürünü veritabanında güncelleyin
+                
                 _dbContext.Products.Update(product);
                 _dbContext.SaveChanges();
 
-                // Ürünü güncelleme işlemi başarılı olduysa, isteğe bağlı olarak başka bir sayfaya yönlendirebilirsiniz.
+                
                 return RedirectToAction("ProductByCategory", new { SelectedCategoryId = editedProduct.CategoryId });
             }
             else
@@ -257,7 +265,7 @@ namespace FinalProject.Controllers
             }
             
 
-            // Eğer ModelState geçerli değilse, formu hata mesajlarıyla birlikte tekrar gösterin.
+            
             return View(editedProduct);
         }
 
@@ -270,15 +278,15 @@ namespace FinalProject.Controllers
             int categoryid = product.CategoryId;
             if (ModelState.IsValid)
             {
-                // Ürünü veritabanında güncelleyin
+                
                 _dbContext.Products.Remove(product);
                 _dbContext.SaveChanges();
 
-                // Ürünü güncelleme işlemi başarılı olduysa, isteğe bağlı olarak başka bir sayfaya yönlendirebilirsiniz.
+                
                 return RedirectToAction("ProductByCategory", new { SelectedCategoryId = categoryid });
             }
 
-            // Eğer ModelState geçerli değilse, formu hata mesajlarıyla birlikte tekrar gösterin.
+           
 
             return View(); }
     }

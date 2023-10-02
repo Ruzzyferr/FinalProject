@@ -7,6 +7,12 @@
         <label for="ProductName">Ürün Adı:</label>
         <input type="text" class="form-control" id="ProductName" name="ProductName" required>
     </div>
+    @if (ViewData["ProductExists"] != null)
+    {
+        <br />
+        <br />
+        <label>@ViewData["ProductExists"]</label>
+    }
     <div class="form-group">
         <label for="ProductImage">Ürün Görseli (Link):</label>
         <input type="hidden" name="CategoryId" value="@Model.CategoryId" />

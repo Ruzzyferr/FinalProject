@@ -41,10 +41,10 @@ namespace FinalProject.Controllers
 
             if (user != null && BCrypt.Net.BCrypt.Verify(modelLogin.Password, user.Password))
             {
-                // Kullanıcı giriş başarılı, admin kontrolü yapalım
+                
                 if (user.IsAdmin)
                 {
-                    // Kullanıcı admin yetkisine sahip, admin rolünü ekleyin
+                    
                     var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, modelLogin.Email),
@@ -62,15 +62,15 @@ namespace FinalProject.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), authenticationProperties);
 
-                    return RedirectToAction("AdminDashboard", "Admin"); // Admin paneline yönlendirin
+                    return RedirectToAction("AdminDashboard", "Admin"); 
                 }
                 else
                 {
-                    // Diğer kullanıcılar için ana sayfaya yönlendirin
+                    
                     var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, modelLogin.Email),
-                new Claim(ClaimTypes.Role, "User") // Örnek olarak "User" rolünü ekleyin
+                new Claim(ClaimTypes.Role, "User") 
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -84,7 +84,7 @@ namespace FinalProject.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity), authenticationProperties);
 
-                    return RedirectToAction("Index", "Home"); // Ana sayfaya yönlendirin
+                    return RedirectToAction("Index", "Home"); 
                 }
             }
 
@@ -102,13 +102,25 @@ namespace FinalProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Şifre doğrulama işlemi
+                
                 if (model.Password != model.PasswordVerify)
                 {
                     ViewData["ValidateMessage"] = "Şifreler Birbiri ile eşleşmiyor";
                     return View(model);
                 }
-                // Mail kontrol işlemi
+
+                if (model.Password.Length < 8)
+                {
+                    ViewData["ValidateMessage"] = "Şifre en az 8 karakter içermelidir";
+                    return View(model);
+                }
+
+                if (!IsPasswordComplex(model.Password))
+                {
+                    ViewData["ValidateMessage"] = "Şifre en az bir büyük harf, bir küçük harf ve bir rakam içermelidir";
+                    return View(model);
+                }
+
                 User existingUser = _dbContext.Users.FirstOrDefault(u => u.Email == model.Email);
                 if (existingUser != null)
                 {
@@ -125,7 +137,7 @@ namespace FinalProject.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    Password = hashedPassword, // Bu şifreyi güvenli bir şekilde saklamalısınız.
+                    Password = hashedPassword, 
                                                
                 };
                 _dbContext.Users.Add(newUser);
@@ -136,6 +148,36 @@ namespace FinalProject.Controllers
             }
 
             return View(model);
+        }
+
+        private bool IsPasswordComplex(string password)
+        {
+            bool hasUpperCase = false;
+            bool hasLowerCase = false;
+            bool hasDigit = false;
+
+            foreach (char c in password)
+            {
+                if (char.IsUpper(c))
+                {
+                    hasUpperCase = true;
+                }
+                else if (char.IsLower(c))
+                {
+                    hasLowerCase = true;
+                }
+                else if (char.IsDigit(c))
+                {
+                    hasDigit = true;
+                }
+
+                if (hasUpperCase && hasLowerCase && hasDigit)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
 

@@ -27,6 +27,7 @@ namespace FinalProject.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Index()
         {
             ClaimsPrincipal claimUser = HttpContext.User;
@@ -40,24 +41,24 @@ namespace FinalProject.Controllers
     .Where(s => s.UserId == _context.Users.FirstOrDefault(u => u.Email == userEmail).UserId)
     .ToListAsync();
 
-            // ShoppingListViewModel listesi oluşturun ve ShoppingList'leri dönüştürün
+            
             var shoppingListViewModels = shoppingLists.Select(sl => new ShoppingListListViewModel
             {
-                // ShoppingList'ten gerekli bilgileri alın ve ShoppingListViewModel'e atayın
+                
                 ShoppingListId = sl.ShoppingListId,
                 Name = sl.Name,
                 IsShoppingCompleted = sl.IsShoppingCompleted,
                 IsShoppingInProgress = sl.IsShoppingInProgress,
             }).ToList();
 
-            // shoppingListViewModels şimdi ShoppingListViewModel listesini içerir
+            
 
 
 
             return View(shoppingListViewModels);
         }
 
-        // Alışveriş listesi oluşturma işlevi
+        
         [Authorize(Roles = "User")]
         public IActionResult CreateShoppingList()
         {
@@ -70,12 +71,12 @@ namespace FinalProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kullanıcıyı bulun
+                
                 var userEmail = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
                 if (user == null)
                 {
-                    return RedirectToAction("Index"); // Kullanıcı bulunamazsa Index sayfasına yönlendirin
+                    return RedirectToAction("Index"); 
                 }
 
                 var shopinglist = new ShoppingList
@@ -83,18 +84,18 @@ namespace FinalProject.Controllers
                     Name = shoppingList.Name,
                 };
 
-                shopinglist.UserId = user.UserId; // Kullanıcıyı alışveriş listesine ata
+                shopinglist.UserId = user.UserId; 
                 _context.Add(shopinglist);
                 _context.SaveChanges();
 
-                // Alışveriş listesini oluşturduktan sonra Index sayfasına yönlendirirken modeli gönderin
+                
                 var shoppingLists = await _context.ShoppingLists
                     .Where(s => s.UserId == user.UserId)
                     .ToListAsync();
 
                 var shoppingListViewModels = shoppingLists.Select(sl => new ShoppingListListViewModel
                 {
-                    // ShoppingList'ten gerekli bilgileri alın ve ShoppingListViewModel'e atayın
+                    
                     ShoppingListId = sl.ShoppingListId,
                     Name = sl.Name,
                     IsShoppingCompleted = sl.IsShoppingCompleted,
@@ -108,7 +109,7 @@ namespace FinalProject.Controllers
         }
 
 
-        // Alışveriş listesi görüntüleme işlevi
+        
         [Authorize(Roles = "User")]
         public async Task<IActionResult> ViewShoppingList(int? id)
         {
@@ -155,12 +156,15 @@ namespace FinalProject.Controllers
 
             return RedirectToAction("Index");
         }
-
-        public IActionResult AddItem(int id)
+        
+        [Authorize(Roles = "User")]
+        public IActionResult AddItem(int id, int categoryId = 0)
         {
-            var products = _context.Products.ToList(); // Tüm ürünleri alabilirsiniz, gerektiğinde filtrelemeyi yapabilirsiniz.
+            var products = _context.Products.ToList();
+            var categories = _context.Categories.ToList();
 
             List<VMProduct> vmProducts = new List<VMProduct>();
+            List<VMCategory> vmCategories = new List<VMCategory>();
 
             foreach (var product in products)
             {
@@ -168,27 +172,54 @@ namespace FinalProject.Controllers
                 {
                     ID = product.ProductId,
                     ProductName = product.Name,
-                    ProductImage = product.ProductImage
+                    ProductImage = product.ProductImage,
+                    CategoryId = product.CategoryId,
                 };
 
                 vmProducts.Add(vmProduct);
             }
 
-
-            var shoppingListItem = new ShoppingListItemDto
+            foreach (var category in categories)
             {
-                ShoppingListId = id,
-                products = vmProducts,
-            };
-            return View(shoppingListItem);
+                VMCategory vMCategory = new VMCategory
+                {
+                    Id = category.CategoryId,
+                    CategoryName = category.Name
+                };
+                vmCategories.Add(vMCategory);
+            }
+
+
+            if (categoryId == 0)
+            {
+                var shoppingListItem = new ShoppingListItemDto
+                {
+                    ShoppingListId = id,
+                    products = vmProducts,
+                    Categories = vmCategories
+                };
+                return View(shoppingListItem);
+            }
+            else 
+            {
+                var filteredProducts = vmProducts.Where(p => p.CategoryId == categoryId).ToList();
+                var shoppingListItem = new ShoppingListItemDto
+                {
+                    ShoppingListId = id,
+                    products = filteredProducts,
+                    Categories = vmCategories
+                };
+                return View(shoppingListItem);
+            }
         }
 
+        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> AddItem(ShoppingListItemDto shoppingListItemDto)
         {
             if (ModelState.IsValid)
             {
-                // Seçilen ürünü ve açıklamayı kullanarak yeni bir ShoppingListItem oluşturun
+                
                 var shoppingListItem = new ShoppingListItem
                 {
                     ShoppinglistId = shoppingListItemDto.ShoppingListId,
@@ -196,21 +227,21 @@ namespace FinalProject.Controllers
                     ProductId = shoppingListItemDto.ProductId,
                     Product = _context.Products.FirstOrDefault(x => x.ProductId == shoppingListItemDto.ProductId),
                     Description = shoppingListItemDto.Description,
-                    ProductImage = _context.Products.FirstOrDefault(x => x.ProductId == shoppingListItemDto.ProductId).ProductImage
-
+                    ProductImage = _context.Products.FirstOrDefault(x => x.ProductId == shoppingListItemDto.ProductId).ProductImage,
+                    
                 };
 
-                // ShoppingListItem'i veritabanına ekleyin
+                
                 _context.ShoppingListItems.Add(shoppingListItem);
                 await _context.SaveChangesAsync();
 
-                // İlgili alışveriş listesine geri dönün
+                
                 return RedirectToAction("ViewShoppingList", new {
                 id = shoppingListItemDto.ShoppingListId,
                 });
             }
 
-            var products = _context.Products.ToList(); // Tüm ürünleri alabilirsiniz, gerektiğinde filtrelemeyi yapabilirsiniz.
+            var products = _context.Products.ToList(); 
 
             List<VMProduct> vmProducts = new List<VMProduct>();
 
@@ -231,26 +262,28 @@ namespace FinalProject.Controllers
             return View(shoppingListItemDto);
         }
 
+        [Authorize(Roles = "User")]
         public IActionResult GoingToShopping(int id)
         {
-            // Veritabanından ShoppingListId'ye göre ilgili alışveriş listesini alın
+            
             var shoppingList = _context.ShoppingLists.FirstOrDefault(s => s.ShoppingListId == id);
 
             if (shoppingList == null)
             {
-                // Belirtilen ShoppingListId'ye sahip alışveriş listesi bulunamazsa hata işleme kodunu ekleyin.
-                return NotFound(); // Örnek bir hata durumu; isteğe bağlı olarak farklı bir işlem yapabilirsiniz.
+                
+                return NotFound(); 
             }
 
-            // ShoppingListItemDto listesini oluşturun ve veritabanından ilgili ürünleri çekin
+            
             var shoppingItems = _context.ShoppingListItems
                 .Where(item => item.ShoppinglistId == id)
                 .Select(item => new ShoppingListItemDto
                 {
+                    ShoppingListItemId = item.ShoppingListItemId,
                     ShoppingListId = item.ShoppinglistId,
-                    ProductName = item.Product.Name, // Ürün adını çekin
+                    ProductName = item.Product.Name, 
                     Description = item.Description,
-                    // Diğer özellikleri doldurun
+                    
                 })
                 .ToList();
 
@@ -259,23 +292,57 @@ namespace FinalProject.Controllers
             return View(shoppingItems);
         }
 
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public IActionResult CompleteShopping(List<ShoppingListItemDto> shoppingListItems)
+        {
+            if (shoppingListItems != null && shoppingListItems.Any())
+            {
+                
+                var itemsToRemove = shoppingListItems.Where(item => item.IsChecked).ToList();
+
+                if (itemsToRemove.Any())
+                {
+                    foreach (var itemToRemove in itemsToRemove)
+                    {
+                        
+                        var item = _context.ShoppingListItems.FirstOrDefault(i => i.ShoppingListItemId == itemToRemove.ShoppingListItemId);
+                        if (item != null)
+                        {
+                            
+                            _context.ShoppingListItems.Remove(item);
+                        }
+                    }
+
+                    
+                    _context.SaveChanges();
+                }
+            }
+
+            
+            return RedirectToAction("Index");
+        }
+
+
+
+        [Authorize(Roles = "User")]
         [HttpPost]
         public IActionResult RemoveFromList(int id)
         {
-            // Veritabanından ilgili ürünü çekin
+            
             var shoppingListItem = _context.ShoppingListItems.FirstOrDefault(item => item.ShoppingListItemId == id);
 
             if (shoppingListItem == null)
             {
-                // Belirtilen ShoppingListItemId'ye sahip öğe bulunamazsa hata işleme kodunu ekleyin.
-                return NotFound(); // Örnek bir hata durumu; isteğe bağlı olarak farklı bir işlem yapabilirsiniz.
+                
+                return NotFound(); 
             }
 
-            // Ürünü veritabanından silin
+            
             _context.ShoppingListItems.Remove(shoppingListItem);
             _context.SaveChanges();
 
-            // Kullanıcıyı aynı alışveriş listesi sayfasına yönlendirin
+            
             return RedirectToAction("ViewShoppingList", new { id = shoppingListItem.ShoppinglistId });
         }
 

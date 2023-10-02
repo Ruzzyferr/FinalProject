@@ -11,6 +11,9 @@ namespace FinalProject.Models.DTOs
         public int ShoppingListId { get; set; }
 
         [ValidateNever]
+        public List<VMCategory> Categories { get; set; }
+
+        [ValidateNever]
         public string ProductName { get; set; }
 
         public int ProductId { get; set; }

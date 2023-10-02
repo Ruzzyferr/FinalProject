@@ -11,6 +11,17 @@
 
     <h2>Ürün Ekle</h2>
 
+    <div style="float:right; margin-bottom:10px;">
+        <select id="categoryDropdown" class="form-control">
+            <option value="">Tüm Kategoriler</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.CategoryName</option>
+            }
+        </select>
+        <button id="filterButton" class="btn btn-primary">Filtrele</button>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
@@ -48,6 +59,8 @@
                             <input type="hidden" asp-for="ProductId" value="@product.ID" />
                             <input type="hidden" asp-for="products" value="@Model.products" />
                             <input type="hidden" asp-for="ProductName" value="@product.ProductName" />
+                            <input type="hidden" asp-for="Categories" value="@Model.Categories" />
+
                             <div class="form-group">
                                 <label for="description">Açıklama:</label>
                                 <textarea class="form-control" id="description" name="Description" rows="3" required></textarea>
@@ -61,10 +74,18 @@
         </div>
     }
 
-    <!-- Sayfanın içeriği buraya gelecek -->
+    
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById("filterButton").addEventListener("click", function () {
+            var selectedCategoryId = document.getElementById("categoryDropdown").value;
+            var shoppingListId = @Model.ShoppingListId;
+            window.location.href = "/Home/AddItem?id=" + shoppingListId + "&categoryId=" + selectedCategoryId;
+        });
+    </script>
+
 </body>
 </html>

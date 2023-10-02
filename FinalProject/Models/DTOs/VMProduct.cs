@@ -12,9 +12,6 @@ namespace FinalProject.Models.DTOs
 
         [Display(Name = "Ürün Görseli")]
         public String ProductImage { get; set; }
-
-        [Required(ErrorMessage = "Kategori seçimi zorunludur.")]
-        [Display(Name = "Kategori")]
         public int CategoryId { get; set; }
 
     }

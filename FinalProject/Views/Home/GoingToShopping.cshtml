@@ -2,7 +2,7 @@
 
 <h2>Alışverişe Çıkıyorum</h2>
 
-<form asp-action="CompleteShopping" method="post">
+<form asp-controller="Home" asp-action="CompleteShopping" method="post">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -12,18 +12,19 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @for (int i = 0; i < Model.Count; i++)
             {
                 <tr>
-                    <td>@item.ProductName</td>
-                    <td>@item.Description</td>
+                    <td>@Model[i].ProductName</td>
+                    <td>@Model[i].Description</td>
                     <td>
-                        <input type="checkbox" asp-for="@item.IsChecked" />
-                        <input type="hidden" asp-for="@item.ShoppingListItemId" />
+                        <input type="checkbox" asp-for="@Model[i].IsChecked" />
+                        <input type="hidden" asp-for="@Model[i].ShoppingListItemId" />
+                        <input type="hidden" asp-for="@Model[i].ShoppingListId" />
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Alışveriş Tamamlandı</a>
+    <button type="submit" class="btn btn-secondary">Alışveriş Tamamlandı</button>
 </form>
