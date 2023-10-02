@@ -1,0 +1,39 @@
+﻿@model FinalProject.Models.DTOs.ShoppingListDto
+
+<h2>@Model.Name</h2>
+
+<div class="btn-group" style="float:right; margin-bottom:10px;">
+    <a asp-action="GoingToShopping" asp-controller="Home" asp-route-id="@Model.ShoppingListId" class="btn btn-success">Alışverişe Çıkıyorum</a>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Listelerime Geri Dön</a>
+    <a asp-action="DeleteList" asp-controller="Home" asp-route-id="@Model.ShoppingListId" class="btn btn-danger">Bu Listeyi Sil</a>
+    <a asp-action="AddItem" asp-controller="Home" asp-route-id="@Model.ShoppingListId" class="btn btn-primary">Ürün Ekle</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ürün Görseli</th>
+            <th>Ürün Adı</th>
+            <th>Açıklama</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    <img src="@item.ProductImage" alt="@item.ProductName" width="100" height="75" />
+                </td>
+                <td>@item.ProductName</td>
+                <td>@item.Description</td>
+                <td>
+                    <form asp-action="RemoveFromList" asp-controller="Home" method="post">
+                        <input type="hidden" name="id" value="@item.ShoppingListItemId" />
+                        <button type="submit" class="btn btn-danger">Çıkar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

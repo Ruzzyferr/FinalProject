@@ -6,10 +6,14 @@ namespace FinalProject.Models.Classes
     {
 
         [Key] public int ShoppingListItemId { get; set; }
-        public int ShoppingListId { get; set; }
-        public ShoppingList ShoppingList { get; set; }
         public int ProductId { get; set; }
+
+        public string ProductName { get; set; }
+
+        public string ProductImage { get; set; }
+        public int ShoppinglistId{ get; set; }
+
         public Product Product { get; set; }
-        public int Quantity { get; set; }
+        public String Description { get; set; }
     }
 }

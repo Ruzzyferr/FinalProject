@@ -17,15 +17,6 @@ namespace FinalProject.Models.DTOs
         [Compare("Password", ErrorMessage = "Password and confirmation password do not match.")]
         public string PasswordVerify { get; set; }
 
-        public string PhoneNumber { get; set; }
-
-        public DateTime BirthDate { get; set; }
-
-        public string Address { get; set; }
-
-        public string City { get; set; }
-
-        public string PostalCode { get; set; }
 
     }
 }

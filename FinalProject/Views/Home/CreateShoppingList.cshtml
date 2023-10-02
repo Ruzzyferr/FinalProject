@@ -1,0 +1,14 @@
+﻿@model FinalProject.Models.DTOs.ShoppingListViewModel
+
+<h2>Alışveriş Listesi Oluştur</h2>
+
+<form asp-controller="Home" asp-action="CreateShoppingList" method="post">
+    <div class="form-group">
+        <label for="Name">Liste Adı:</label>
+        <input type="text" class="form-control" id="Name" name="Name" required>
+    </div>
+    <div style="text-align: right;">
+        <button type="submit" class="btn btn-success">Kaydet</button>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">İptal</a>
+    </div>
+</form>

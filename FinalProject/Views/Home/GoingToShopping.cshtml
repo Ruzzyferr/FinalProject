@@ -1,0 +1,29 @@
+﻿@model List<FinalProject.Models.DTOs.ShoppingListItemDto>
+
+<h2>Alışverişe Çıkıyorum</h2>
+
+<form asp-action="CompleteShopping" method="post">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ürün Adı</th>
+                <th>Ürün Açıklaması</th>
+                <th>İşaretle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <input type="checkbox" asp-for="@item.IsChecked" />
+                        <input type="hidden" asp-for="@item.ShoppingListItemId" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Alışveriş Tamamlandı</a>
+</form>

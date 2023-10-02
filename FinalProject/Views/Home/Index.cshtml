@@ -1,8 +1,47 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<FinalProject.Models.DTOs.ShoppingListListViewModel>
+
+<h2>Alışveriş Listelerim</h2>
+
+@if (Model.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Alışveriş Listesi Adı</th>
+                <th>Durum</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var shoppingList in Model)
+            {
+                <tr>
+                    <td>@shoppingList.Name</td>
+                    <td>
+                        @if (shoppingList.IsShoppingInProgress)
+                        {
+                            <span class="text-success">Devam Ediyor</span>
+                        }
+                        else if (shoppingList.IsShoppingCompleted)
+                        {
+                            <span class="text-primary">Tamamlandı</span>
+                        }
+                        else
+                        {
+                            <span class="text-warning">Bekliyor</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Home" asp-action="ViewShoppingList" asp-route-id="@shoppingList.ShoppingListId" class="btn btn-primary">Görüntüle</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Henüz alışveriş listeniz yok. Yeni bir liste oluşturun!</p>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<a asp-controller="Home" asp-action="CreateShoppingList" class="btn btn-success">Alışveriş Listesi Oluştur</a>

@@ -6,7 +6,7 @@ namespace FinalProject.Models.Classes
     {
         [Key] public int ProductId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public String ProductImage { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿@model List<FinalProject.Models.Classes.Category> // Kategori listesini model olarak kullanıyoruz
+﻿@model FinalProject.Models.DTOs.EditCategoryViewModel
 
 <h2>Kategorileri Düzenle</h2>
 
@@ -7,18 +7,24 @@
         <tr>
             <th>Kategori Adı</th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var category in ViewBag.Categories) // ViewBag veya ViewData ile gelen kategori listesini kullanma
+        @foreach (var category in Model.Categories)
         {
             <tr>
                 <td>@category.Name</td>
                 <td>
                     <a asp-controller="Admin" asp-action="EditCategoryy" asp-route-id="@category.CategoryId" class="btn btn-primary">Düzenle</a>
                 </td>
+                <td>
+                    <form asp-controller="Admin" asp-action="DeleteCategory" method="post">
+                        <input type="hidden" name="id" value="@category.CategoryId" />
+                        <button type="submit" class="btn btn-danger">Sil</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-

@@ -3,6 +3,7 @@ using FinalProject.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalProject.Migrations
 {
     [DbContext(typeof(ProjectDbContext))]
-    partial class ProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231001153044_EditedShopListt")]
+    partial class EditedShopListt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,22 +110,14 @@ namespace FinalProject.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShoppinglistId")
+                    b.Property<int>("ShoppingListId")
                         .HasColumnType("int");
 
                     b.HasKey("ShoppingListItemId");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ShoppinglistId");
+                    b.HasIndex("ShoppingListId");
 
                     b.ToTable("ShoppingListItems");
                 });
@@ -189,13 +184,15 @@ namespace FinalProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FinalProject.Models.Classes.ShoppingList", null)
+                    b.HasOne("FinalProject.Models.Classes.ShoppingList", "ShoppingList")
                         .WithMany("Items")
-                        .HasForeignKey("ShoppinglistId")
+                        .HasForeignKey("ShoppingListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("ShoppingList");
                 });
 
             modelBuilder.Entity("FinalProject.Models.Classes.Category", b =>

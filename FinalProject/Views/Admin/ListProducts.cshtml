@@ -1,0 +1,19 @@
+﻿@model FinalProject.Models.DTOs.ProductByCategoryViewModel
+
+<h2>Ürün Ekle</h2>
+
+<form asp-controller="Admin" asp-action="ProductByCategory" method="post">
+    <div class="form-group">
+        <label for="SelectedCategoryId">Kategori Seçin:</label>
+        <select class="form-control" id="SelectedCategoryId" name="SelectedCategoryId" required>
+            <option value="">Kategori Seçin</option>
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.CategoryId">@category.Name</option>
+            }
+        </select>
+    </div>
+    <!-- Diğer ürün bilgileri alanları... -->
+    <input type="hidden" name="SelectedCategoryId" value="@(Model.SelectedCategoryId)" />
+    <button type="submit" class="btn btn-success">Ürünleri Listele</button>
+</form>

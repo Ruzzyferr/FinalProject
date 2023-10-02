@@ -1,0 +1,36 @@
+﻿@model FinalProject.Models.DTOs.ProductByCategoryViewModel
+
+<h2>@ViewBag.CategoryName Ürünleri</h2>
+
+<!-- Ürünleri listeleyin -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>
+                    <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@product.ProductId" class="btn btn-primary">Düzenle</a>
+                </td>
+                <td>
+                    <a asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@product.ProductId" class="btn btn-danger">Sil </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<form asp-controller="Admin" asp-action="SaveProduct" method="post">
+    <input type="hidden" name="SelectedCategoryId" value="@Model.SelectedCategoryId" />
+    <div style="text-align: right;">
+        <button type="submit" class="btn btn-primary">Ürün Ekle</button>
+    </div>
+</form>
+
+<!-- Geri dön butonu -->
+<a asp-controller="Admin" asp-action="ProductByCategory" asp-route-categoryId="@Model.SelectedCategoryId" class="btn btn-secondary">Kategorilere Geri Dön</a>

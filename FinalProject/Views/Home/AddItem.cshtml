@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Ürün Ekle</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+    @model FinalProject.Models.DTOs.ShoppingListItemDto
+
+    <h2>Ürün Ekle</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ürün Adı</th>
+                <th>Ekle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.products)
+            {
+                <tr>
+                    <td>@product.ProductName</td>
+                    <td>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#addItemModal_@product.ID">Ekle</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @foreach (var product in Model.products)
+    {
+        <div class="modal fade" id="addItemModal_@product.ID" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addItemModalLabel">Ürün Ekle</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-action="AddItem" method="post">
+                            <input type="hidden" asp-for="ShoppingListId" value="@Model.ShoppingListId" />
+                            <input type="hidden" asp-for="ProductId" value="@product.ID" />
+                            <input type="hidden" asp-for="products" value="@Model.products" />
+                            <input type="hidden" asp-for="ProductName" value="@product.ProductName" />
+                            <div class="form-group">
+                                <label for="description">Açıklama:</label>
+                                <textarea class="form-control" id="description" name="Description" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Ekle</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Sayfanın içeriği buraya gelecek -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

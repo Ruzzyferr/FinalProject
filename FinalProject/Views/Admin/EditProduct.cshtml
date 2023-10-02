@@ -1,0 +1,18 @@
+﻿@model FinalProject.Models.DTOs.VMProduct
+
+<h2>Ürün Düzenle</h2>
+
+<form asp-controller="Admin" asp-action="EditProduct" method="post">
+    <div class="form-group">
+        <label for="Name">Ürün Adı:</label>
+        <input type="text" class="form-control" id="ProductName" name="ProductName" value="@Model.ProductName" required>
+        <input type="hidden" class="form-control" id ="Id" name="Id" value="@Model.ID" required />
+        <input type="hidden" class="form-control" id="CategoryId" name="CategoryId" value="@Model.CategoryId" required>
+        <input type="hidden" class="form-control" id="ProductImage" name="ProductImage" value="@Model.ProductImage" required>
+
+    </div>
+    <!-- Diğer ürün bilgileri alanları... -->
+    <button type="submit" class="btn btn-success">Ürünü Kaydet</button>
+</form>
+
+<a asp-controller="Admin" asp-action="ProductByCategory" asp-route-categoryId="@Model.CategoryId" class="btn btn-secondary">İptal</a>

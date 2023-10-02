@@ -1,0 +1,16 @@
+﻿@model FinalProject.Models.DTOs.VMProduct
+
+<h2>Ürün Ekle</h2>
+
+<form asp-controller="Admin" asp-action="SaveProductt"  method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="ProductName">Ürün Adı:</label>
+        <input type="text" class="form-control" id="ProductName" name="ProductName" required>
+    </div>
+    <div class="form-group">
+        <label for="ProductImage">Ürün Görseli (Link):</label>
+        <input type="hidden" name="CategoryId" value="@Model.CategoryId" />
+        <input type="text" class="form-control" id="ProductImage" name="ProductImage" required>
+    </div>
+    <button type="submit" class="btn btn-success">Ürünü Kaydet</button>
+</form>

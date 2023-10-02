@@ -24,5 +24,6 @@ namespace FinalProject.Models
             // Örnek: modelBuilder.Entity<ShoppingList>().HasMany(sl => sl.Items).WithOne(sli => sli.ShoppingList);
         }
 
+        
     }
 }

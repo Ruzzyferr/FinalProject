@@ -105,14 +105,14 @@ namespace FinalProject.Controllers
                 // Şifre doğrulama işlemi
                 if (model.Password != model.PasswordVerify)
                 {
-                    ModelState.AddModelError(string.Empty, "Password and confirmation password do not match.");
+                    ViewData["ValidateMessage"] = "Şifreler Birbiri ile eşleşmiyor";
                     return View(model);
                 }
                 // Mail kontrol işlemi
                 User existingUser = _dbContext.Users.FirstOrDefault(u => u.Email == model.Email);
                 if (existingUser != null)
                 {
-                    ModelState.AddModelError(string.Empty, "This email address is already registered.");
+                    ViewData["ValidateMessage"] = "Bu Mail adresi zaten kayıtlı";
                     return View(model);
                 }
 
@@ -126,11 +126,6 @@ namespace FinalProject.Controllers
                     LastName = model.LastName,
                     Email = model.Email,
                     Password = hashedPassword, // Bu şifreyi güvenli bir şekilde saklamalısınız.
-                    BirthDate = model.BirthDate,
-                    Address = model.Address,
-                    City = model.City,
-                    PostalCode = model.PostalCode,
-                    PhoneNumber = model.PhoneNumber,
                                                
                 };
                 _dbContext.Users.Add(newUser);
